@@ -5,8 +5,9 @@ open appointment slot on a calendar, and pay a small non-refundable deposit
 to confirm the booking.
 
 **Stack:** plain HTML/CSS/JS frontend · [Supabase](https://supabase.com) for
-auth + database · [Stripe](https://stripe.com) for the deposit payment ·
-[Netlify](https://netlify.com) for hosting + serverless functions.
+auth + database · [PayFast](https://www.payfast.co.za) for the deposit payment
+(ZAR-native — Stripe doesn't support payouts to South African-registered
+businesses) · [Netlify](https://netlify.com) for hosting + serverless functions.
 
 ---
 
@@ -30,9 +31,10 @@ auth + database · [Stripe](https://stripe.com) for the deposit payment ·
    ```
 4. **A free [GitHub](https://github.com) account** if you don't have one.
 5. **A free [Netlify](https://netlify.com) account**, a free **[Supabase](https://supabase.com)
-   account**, and a **[Stripe](https://stripe.com) account** (Stripe is free to create;
-   you only get charged fees when real payments run through it, and test mode is
-   entirely free).
+   account**, and a free **[PayFast](https://www.payfast.co.za) account**. You'll
+   also want a free **[PayFast Sandbox](https://sandbox.payfast.co.za) account** for
+   testing — it's a separate signup from your live account and lets you test payments
+   with a dummy wallet, no real money involved.
 
 ---
 
@@ -112,14 +114,28 @@ Users** in Supabase to confirm it appeared.
 
 ---
 
-## 4. Set up Stripe (deposit payment)
+## 4. Set up PayFast (deposit payment)
 
-1. At [stripe.com](https://stripe.com), create an account. Stay in **Test mode**
-   (toggle top-right) while you build.
-2. Go to **Developers → API keys**. Copy the **Publishable key** and **Secret key**
-   (test mode versions). You won't need the publishable key for this setup since
-   Checkout is hosted entirely by Stripe — just the secret key, used server-side.
-3. You'll add the secret key as an environment variable in Netlify in the next step.
+1. Go to [sandbox.payfast.co.za](https://sandbox.payfast.co.za) and register for a
+   free sandbox account — this is separate from your live PayFast account and is
+   what you'll build and test against first.
+2. In the sandbox dashboard, go to **Settings → Merchant Details** and copy your
+   **Merchant ID** and **Merchant Key**. (You can also just use PayFast's public
+   test credentials while building: Merchant ID `10000100`, Merchant Key
+   `46f0cd694581a`.)
+3. Go to **Settings → Account Information** and set a **Passphrase**. This is a
+   secret string PayFast uses to sign requests so nobody can tamper with the
+   payment amount in transit — you'll set the same passphrase on your server.
+4. You'll add the Merchant ID, Merchant Key, and Passphrase as environment
+   variables in Netlify in the next step. When you're ready to accept real
+   payments, repeat this signup at [payfast.co.za](https://www.payfast.co.za) for
+   a live account and swap in those credentials.
+
+**Note:** the serverless functions in `netlify/functions/` in this scaffold are
+still written for Stripe (`create-checkout-session.js` and `stripe-webhook.js`).
+They'll need to be rewritten to build a PayFast payment form and handle PayFast's
+ITN (Instant Transaction Notification — PayFast's equivalent of a webhook) before
+step 6 below will actually work. That's a separate follow-up task.
 
 ---
 
@@ -133,17 +149,19 @@ Users** in Supabase to confirm it appeared.
    |---|---|
    | `SUPABASE_URL` | your Supabase project URL |
    | `SUPABASE_SERVICE_ROLE_KEY` | your Supabase service_role key |
-   | `STRIPE_SECRET_KEY` | your Stripe test secret key |
-   | `STRIPE_WEBHOOK_SECRET` | (added in the next sub-step) |
+   | `PAYFAST_MERCHANT_ID` | your PayFast (sandbox, to start) Merchant ID |
+   | `PAYFAST_MERCHANT_KEY` | your PayFast (sandbox, to start) Merchant Key |
+   | `PAYFAST_PASSPHRASE` | the passphrase you set in PayFast |
+   | `PAYFAST_MODE` | `sandbox` while testing, `live` once you go live |
    | `SITE_URL` | your Netlify site URL, e.g. `https://bloom-and-co.netlify.app` |
-4. Deploy the site. Once it's live, go back to **Stripe → Developers → Webhooks →
-   Add endpoint**. Set the URL to:
+4. Deploy the site. PayFast doesn't require you to register the ITN (notification)
+   URL in a dashboard the way Stripe does with webhooks — instead, your server code
+   sends it along as a `notify_url` parameter with every payment request, pointing to:
    ```
-   https://YOUR-SITE.netlify.app/.netlify/functions/stripe-webhook
+   https://YOUR-SITE.netlify.app/.netlify/functions/payfast-itn
    ```
-   Select the event `checkout.session.completed`. Stripe will show you a **signing
-   secret** — copy it into Netlify's `STRIPE_WEBHOOK_SECRET` environment variable
-   and redeploy.
+   (This means the ITN handler function will need to be created under that name —
+   see the note in step 4 above.)
 
 ---
 
@@ -152,15 +170,17 @@ Users** in Supabase to confirm it appeared.
 1. Open your live Netlify URL.
 2. Register a new account, log in.
 3. Go to **Book**, pick a service and a time slot on the calendar.
-4. Click **Pay deposit & confirm** — you'll land on Stripe's test checkout.
-5. Use Stripe's test card: `4242 4242 4242 4242`, any future expiry, any CVC.
+4. Click **Pay deposit & confirm** — you'll land on PayFast's sandbox checkout page.
+5. Sandbox payments use a dummy wallet (reset to a large balance every night) instead
+   of a real card — click **Pay Now Using Your Wallet** to simulate a successful payment.
 6. After paying, check your Supabase **Table Editor → appointments** — the row's
    `status` should flip from `pending` to `confirmed` within a few seconds (that's
-   the webhook firing).
+   the ITN firing). You can also check **ITN** in your PayFast sandbox dashboard to
+   see the notification PayFast sent.
 
-When you're ready to accept real payments, switch Stripe out of test mode, swap
-in your live secret key, and update the webhook endpoint with your live signing
-secret.
+When you're ready to accept real payments, sign up for a live PayFast account,
+swap `PAYFAST_MODE` to `live` and update the Merchant ID/Key/Passphrase in Netlify
+with your live credentials.
 
 ---
 
@@ -180,14 +200,18 @@ nail-salon-app/
 │   ├── auth.js                     Login/register form logic
 │   └── booking.js                   Calendar + checkout trigger
 ├── netlify/functions/
-│   ├── create-checkout-session.js    Starts Stripe Checkout
-│   └── stripe-webhook.js               Confirms booking after payment
+│   ├── create-checkout-session.js    Currently Stripe — needs rewriting for PayFast
+│   └── stripe-webhook.js               Currently Stripe — needs rewriting as an ITN handler
 ├── netlify.toml
 └── package.json
 ```
 
 ## Next steps / ideas
 
+- Rewrite `netlify/functions/create-checkout-session.js` and `stripe-webhook.js`
+  for PayFast: the first builds a signed PayFast payment form/redirect instead of
+  a Stripe Checkout session, the second becomes a `payfast-itn.js` handler that
+  validates PayFast's ITN and marks the appointment `confirmed`.
 - Add a "My appointments" page for logged-in users (query Supabase for
   `appointments` where `user_id = current user`).
 - Block out slots that are already `confirmed` so clients can't double-book
@@ -195,4 +219,3 @@ nail-salon-app/
 - Add email confirmations via Supabase Edge Functions or a service like Resend.
 - Replace the placeholder policy text with your actual terms — consider having
   them reviewed before publishing.
-"# angelic_glam_beauty" 
