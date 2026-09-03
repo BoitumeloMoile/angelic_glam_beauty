@@ -195,3 +195,4 @@ nail-salon-app/
 - Add email confirmations via Supabase Edge Functions or a service like Resend.
 - Replace the placeholder policy text with your actual terms — consider having
   them reviewed before publishing.
+"# angelic_glam_beauty" 
