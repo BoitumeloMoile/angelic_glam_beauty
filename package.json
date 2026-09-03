@@ -1,0 +1,10 @@
+{
+  "name": "bloom-and-co-nail-studio",
+  "version": "1.0.0",
+  "description": "Nail salon booking site: static frontend + Netlify functions for Stripe deposits",
+  "private": true,
+  "dependencies": {
+    "stripe": "^16.0.0",
+    "@supabase/supabase-js": "^2.45.0"
+  }
+}

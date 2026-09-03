@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Book an appointment — Bloom & Co. Nail Studio</title>
+<link rel="stylesheet" href="css/style.css">
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.css" rel="stylesheet">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">Bloom <span>&amp; Co.</span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">Services</a></li>
+        <li><a href="appointments.html" class="active">Book</a></li>
+        <li><a href="policy.html">Policy</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline">Log in</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="section-head">
+      <h1>Book an appointment</h1>
+      <p>Pick a service and an open time below. You'll place a $20 deposit to confirm the slot — it's applied to your total and is non-refundable. See the full <a href="policy.html">booking policy</a>.</p>
+    </div>
+
+    <div class="field" style="max-width:320px">
+      <label for="service-select">Service</label>
+      <select id="service-select">
+        <option value="manicure">Classic manicure — $35</option>
+        <option value="gel-manicure">Gel manicure — $50</option>
+        <option value="pedicure">Classic pedicure — $45</option>
+        <option value="spa-pedicure">Spa pedicure — $65</option>
+        <option value="extensions">Gel &amp; acrylic extensions — from $60</option>
+      </select>
+    </div>
+
+    <!-- FullCalendar renders into this element. Available slots are loaded
+         from the database in js/booking.js -->
+    <div id="booking-calendar"></div>
+
+    <!-- Shown once a date/time is selected -->
+    <div class="booking-summary" id="booking-summary" style="display:none">
+      <h3>Confirm your slot</h3>
+      <dl>
+        <dt>Service</dt><dd id="summary-service">—</dd>
+        <dt>Date</dt><dd id="summary-date">—</dd>
+        <dt>Time</dt><dd id="summary-time">—</dd>
+        <dt>Deposit</dt><dd>$20 (non-refundable, applied to your total)</dd>
+      </dl>
+      <button class="btn btn-primary" id="pay-deposit-btn">Pay deposit &amp; confirm</button>
+      <p class="form-note">You'll need to be logged in to complete booking. <a href="login.html">Log in</a> or <a href="register.html">create an account</a> first.</p>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; 2026 Bloom &amp; Co. Nail Studio</span>
+    <span><a href="policy.html">Policy &amp; terms</a></span>
+  </div>
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js"></script>
+<script type="module" src="js/supabaseClient.js"></script>
+<script type="module" src="js/booking.js"></script>
+</body>
+</html>

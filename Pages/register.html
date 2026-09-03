@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Register — Bloom & Co. Nail Studio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">Bloom <span>&amp; Co.</span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">Services</a></li>
+        <li><a href="appointments.html">Book</a></li>
+        <li><a href="policy.html">Policy</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a href="login.html" class="btn btn-outline">Log in instead</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="form-panel">
+      <h1>Create an account</h1>
+      <p>You'll need an account to book and manage appointments.</p>
+
+      <form id="register-form" novalidate>
+        <div class="field">
+          <label for="full-name">Full name</label>
+          <input type="text" id="full-name" name="fullName" required>
+        </div>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="phone">Phone number</label>
+          <input type="tel" id="phone" name="phone" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" minlength="8" required>
+        </div>
+        <p class="form-error" id="register-error">Please fill in every field with a valid value.</p>
+        <button type="submit" class="btn btn-primary" style="width:100%">Create account</button>
+        <p class="form-note">Already have an account? <a href="login.html">Log in</a>.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; 2026 Bloom &amp; Co. Nail Studio</span>
+    <span><a href="policy.html">Policy &amp; terms</a></span>
+  </div>
+</footer>
+
+<script type="module" src="js/supabaseClient.js"></script>
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,248 @@
+/* ===================================================================
+   Bloom & Co. — design tokens
+   A warm, hand-finished salon feel: deep rose, soft blush, warm cream,
+   a serif with personality for headings, a clean grotesque for body.
+   =================================================================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #2B2420;
+  --ink-soft: #5C5148;
+  --cream: #FBF7F2;
+  --blush: #F3E3E1;
+  --rose: #A8435F;
+  --rose-deep: #7A2E44;
+  --gold: #B8894F;
+  --line: #E4D9D2;
+  --white: #FFFFFF;
+
+  --font-display: 'Fraunces', serif;
+  --font-body: 'Work Sans', sans-serif;
+
+  --max-width: 1080px;
+  --radius: 3px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--cream);
+  color: var(--ink);
+  font-family: var(--font-body);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  line-height: 1.15;
+  margin: 0 0 0.5em;
+  color: var(--ink);
+}
+
+h1 { font-size: clamp(2.4rem, 5vw, 3.6rem); font-weight: 400; }
+h2 { font-size: clamp(1.7rem, 3vw, 2.2rem); }
+h3 { font-size: 1.25rem; }
+
+p { max-width: 62ch; color: var(--ink-soft); }
+
+a { color: var(--rose); text-decoration: none; }
+a:hover { color: var(--rose-deep); }
+a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible {
+  outline: 2px solid var(--rose);
+  outline-offset: 2px;
+}
+
+.wrap {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* ---------- Header / nav ---------- */
+.site-header {
+  border-bottom: 1px solid var(--line);
+  background: var(--cream);
+}
+
+.site-header .wrap {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.logo {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  color: var(--ink);
+}
+.logo span { color: var(--rose); }
+
+.nav-links {
+  display: flex;
+  gap: 28px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.nav-links a {
+  color: var(--ink-soft);
+  font-size: 0.95rem;
+}
+.nav-links a.active { color: var(--rose); }
+
+.nav-actions { display: flex; gap: 12px; align-items: center; }
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 12px 26px;
+  border-radius: var(--radius);
+  border: 1px solid transparent;
+  font-family: var(--font-body);
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+}
+.btn-primary { background: var(--rose); color: var(--white); }
+.btn-primary:hover { background: var(--rose-deep); color: var(--white); }
+.btn-outline { background: transparent; border-color: var(--ink); color: var(--ink); }
+.btn-outline:hover { border-color: var(--rose); color: var(--rose); }
+
+/* ---------- Hero ---------- */
+.hero {
+  padding: 88px 0 72px;
+  border-bottom: 1px solid var(--line);
+}
+.hero .wrap {
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  gap: 48px;
+  align-items: center;
+}
+.hero-copy p { margin-bottom: 1.6em; }
+.hero-actions { display: flex; gap: 14px; flex-wrap: wrap; }
+.hero-art {
+  aspect-ratio: 4/5;
+  background: var(--blush);
+  border-radius: var(--radius);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--gold);
+  font-family: var(--font-display);
+  font-style: italic;
+  text-align: center;
+  padding: 24px;
+}
+
+@media (max-width: 800px) {
+  .hero .wrap { grid-template-columns: 1fr; }
+  .nav-links { display: none; }
+}
+
+/* ---------- Sections ---------- */
+section { padding: 64px 0; }
+.section-blush { background: var(--blush); }
+.section-head { max-width: 640px; margin-bottom: 40px; }
+
+/* ---------- Service list ---------- */
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0;
+  border-top: 1px solid var(--line);
+}
+.service-row {
+  padding: 28px 0;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.service-row .price { color: var(--gold); font-family: var(--font-display); font-style: italic; }
+
+/* ---------- Forms ---------- */
+.form-panel {
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 40px 0;
+}
+.field { margin-bottom: 20px; }
+.field label {
+  display: block;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+  margin-bottom: 6px;
+}
+.field input, .field select {
+  width: 100%;
+  padding: 11px 14px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  background: var(--white);
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--ink);
+}
+.field input:focus, .field select:focus { border-color: var(--rose); }
+.form-note { font-size: 0.85rem; color: var(--ink-soft); margin-top: 18px; }
+.form-error {
+  display: none;
+  color: var(--rose-deep);
+  font-size: 0.85rem;
+  margin-top: -12px;
+  margin-bottom: 16px;
+}
+
+/* ---------- Booking / calendar ---------- */
+#booking-calendar {
+  margin: 24px 0 40px;
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 12px;
+  background: var(--white);
+}
+.booking-summary {
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 24px;
+  background: var(--white);
+}
+.booking-summary dl { display: grid; grid-template-columns: 120px 1fr; row-gap: 10px; margin: 0 0 20px; }
+.booking-summary dt { color: var(--ink-soft); font-size: 0.9rem; }
+.booking-summary dd { margin: 0; }
+
+/* ---------- Policy page ---------- */
+.policy-body h3 { margin-top: 2em; }
+.policy-body p, .policy-body li { color: var(--ink-soft); }
+
+/* ---------- Footer ---------- */
+.site-footer {
+  border-top: 1px solid var(--line);
+  padding: 40px 0;
+  margin-top: 40px;
+}
+.site-footer .wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 16px;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+.site-footer a { color: var(--ink-soft); }
+
+.sr-only {
+  position: absolute; width: 1px; height: 1px;
+  overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap;
+}

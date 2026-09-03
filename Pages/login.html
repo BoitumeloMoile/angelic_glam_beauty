@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Log in — Bloom & Co. Nail Studio</title>
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <a href="index.html" class="logo">Bloom <span>&amp; Co.</span></a>
+    <nav>
+      <ul class="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="about.html">Services</a></li>
+        <li><a href="appointments.html">Book</a></li>
+        <li><a href="policy.html">Policy</a></li>
+      </ul>
+    </nav>
+    <div class="nav-actions">
+      <a href="register.html" class="btn btn-outline">Register instead</a>
+    </div>
+  </div>
+</header>
+
+<section>
+  <div class="wrap">
+    <div class="form-panel">
+      <h1>Log in</h1>
+      <p>Welcome back. Log in to view or book your appointments.</p>
+
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <p class="form-error" id="login-error">Enter a valid email and password.</p>
+        <button type="submit" class="btn btn-primary" style="width:100%">Log in</button>
+        <p class="form-note">No account yet? <a href="register.html">Register here</a>.</p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <span>&copy; 2026 Bloom &amp; Co. Nail Studio</span>
+    <span><a href="policy.html">Policy &amp; terms</a></span>
+  </div>
+</footer>
+
+<script type="module" src="js/supabaseClient.js"></script>
+<script type="module" src="js/auth.js"></script>
+</body>
+</html>
