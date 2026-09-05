@@ -1,4 +1,4 @@
-# Bloom & Co. Nail Studio
+# Angelic Glam beauty bar
 
 A booking website for a nail salon: browse services, register/log in, pick an
 open appointment slot on a calendar, and pay a small non-refundable deposit
