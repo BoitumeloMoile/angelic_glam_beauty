@@ -1,4 +1,4 @@
-# Bloom & Co. Nail Studio
+# Angelic Glam Beauty Bar
 
 A booking website for a nail salon: browse services, register/log in, pick an
 open appointment slot on a calendar, and pay a small non-refundable deposit
@@ -64,7 +64,7 @@ already have one), copy the commands GitHub shows you under "…or push an exist
 repository", and run them. It'll look like:
 
 ```bash
-git remote add origin https://github.com/YOUR-USERNAME/bloom-and-co.git
+git remote add origin https://github.com/YOUR-USERNAME/angelic-glam-beauty-bar.git
 git branch -M main
 git push -u origin main
 ```
@@ -131,12 +131,6 @@ Users** in Supabase to confirm it appeared.
    payments, repeat this signup at [payfast.co.za](https://www.payfast.co.za) for
    a live account and swap in those credentials.
 
-**Note:** the serverless functions in `netlify/functions/` in this scaffold are
-still written for Stripe (`create-checkout-session.js` and `stripe-webhook.js`).
-They'll need to be rewritten to build a PayFast payment form and handle PayFast's
-ITN (Instant Transaction Notification — PayFast's equivalent of a webhook) before
-step 6 below will actually work. That's a separate follow-up task.
-
 ---
 
 ## 5. Deploy to Netlify and connect everything
@@ -153,15 +147,14 @@ step 6 below will actually work. That's a separate follow-up task.
    | `PAYFAST_MERCHANT_KEY` | your PayFast (sandbox, to start) Merchant Key |
    | `PAYFAST_PASSPHRASE` | the passphrase you set in PayFast |
    | `PAYFAST_MODE` | `sandbox` while testing, `live` once you go live |
-   | `SITE_URL` | your Netlify site URL, e.g. `https://bloom-and-co.netlify.app` |
+   | `SITE_URL` | your Netlify site URL, e.g. `https://angelic-glam-beauty-bar.netlify.app` |
 4. Deploy the site. PayFast doesn't require you to register the ITN (notification)
-   URL in a dashboard the way Stripe does with webhooks — instead, your server code
-   sends it along as a `notify_url` parameter with every payment request, pointing to:
+   URL in a dashboard the way Stripe does with webhooks — instead, the server code
+   in `netlify/functions/create-payment.js` sends it along as a `notify_url`
+   parameter with every payment request, pointing to:
    ```
    https://YOUR-SITE.netlify.app/.netlify/functions/payfast-itn
    ```
-   (This means the ITN handler function will need to be created under that name —
-   see the note in step 4 above.)
 
 ---
 
@@ -200,18 +193,14 @@ nail-salon-app/
 │   ├── auth.js                     Login/register form logic
 │   └── booking.js                   Calendar + checkout trigger
 ├── netlify/functions/
-│   ├── create-checkout-session.js    Currently Stripe — needs rewriting for PayFast
-│   └── stripe-webhook.js               Currently Stripe — needs rewriting as an ITN handler
+│   ├── create-payment.js          Holds the slot, builds signed PayFast fields
+│   └── payfast-itn.js               Confirms booking after PayFast payment
 ├── netlify.toml
 └── package.json
 ```
 
 ## Next steps / ideas
 
-- Rewrite `netlify/functions/create-checkout-session.js` and `stripe-webhook.js`
-  for PayFast: the first builds a signed PayFast payment form/redirect instead of
-  a Stripe Checkout session, the second becomes a `payfast-itn.js` handler that
-  validates PayFast's ITN and marks the appointment `confirmed`.
 - Add a "My appointments" page for logged-in users (query Supabase for
   `appointments` where `user_id = current user`).
 - Block out slots that are already `confirmed` so clients can't double-book

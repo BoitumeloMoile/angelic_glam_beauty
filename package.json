@@ -1,10 +1,9 @@
 {
-  "name": "bloom-and-co-nail-studio",
+  "name": "angelic-glam-beauty-bar",
   "version": "1.0.0",
-  "description": "Nail salon booking site: static frontend + Netlify functions for Stripe deposits",
+  "description": "Angelic Glam Beauty Bar booking site: static frontend + Netlify functions for PayFast deposits",
   "private": true,
   "dependencies": {
-    "stripe": "^16.0.0",
     "@supabase/supabase-js": "^2.45.0"
   }
 }

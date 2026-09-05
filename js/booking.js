@@ -1,6 +1,6 @@
 // ---------------------------------------------------------------------
 // Renders the booking calendar, lets the client pick an open slot,
-// and kicks off a Stripe Checkout session for the deposit.
+// and kicks off a PayFast payment for the deposit.
 // ---------------------------------------------------------------------
 import { supabase } from './supabaseClient.js';
 
@@ -62,9 +62,10 @@ payBtn?.addEventListener('click', async () => {
   payBtn.disabled = true;
   payBtn.textContent = 'Redirecting to payment…';
 
-  // Calls the serverless function in netlify/functions/create-checkout-session.js
-  // which creates a Stripe Checkout Session and returns its URL.
-  const res = await fetch('/.netlify/functions/create-checkout-session', {
+  // Calls the serverless function in netlify/functions/create-payment.js,
+  // which holds the slot and returns a signed set of PayFast fields —
+  // PayFast needs a real form POST, not a simple redirect URL.
+  const res = await fetch('/.netlify/functions/create-payment', {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({
@@ -72,10 +73,11 @@ payBtn?.addEventListener('click', async () => {
       startTime: selectedSlot.start.toISOString(),
       userId: session.user.id,
       userEmail: session.user.email,
+      userName: session.user.user_metadata?.full_name,
     }),
   });
 
-  const { url, error } = await res.json();
+  const { processUrl, fields, error } = await res.json();
 
   if (error) {
     alert(error);
@@ -84,7 +86,22 @@ payBtn?.addEventListener('click', async () => {
     return;
   }
 
-  window.location.href = url; // Stripe-hosted checkout page
+  // Build a hidden form and submit it — this is how PayFast expects to
+  // receive the signed payment fields (a JSON redirect won't work here).
+  const form = document.createElement('form');
+  form.method = 'POST';
+  form.action = processUrl;
+
+  for (const [key, value] of Object.entries(fields)) {
+    const input = document.createElement('input');
+    input.type = 'hidden';
+    input.name = key;
+    input.value = value;
+    form.appendChild(input);
+  }
+
+  document.body.appendChild(form);
+  form.submit();
 });
 
 init();

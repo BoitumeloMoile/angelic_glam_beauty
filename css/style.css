@@ -7,14 +7,14 @@
 @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,400;0,9..144,500;0,9..144,600;1,9..144,500&family=Work+Sans:wght@400;500;600&display=swap');
 
 :root {
-  --ink: #2B2420;
-  --ink-soft: #5C5148;
-  --cream: #FBF7F2;
-  --blush: #F3E3E1;
-  --rose: #A8435F;
-  --rose-deep: #7A2E44;
-  --gold: #B8894F;
-  --line: #E4D9D2;
+  --ink: #3C3930;
+  --ink-soft: #6E6B62;
+  --cream: #FFFFFF;
+  --blush: #FDECEC;
+  --rose: #E17A7A;
+  --rose-deep: #C85F5F;
+  --gold: #9A9A9A;
+  --line: #E6E6E6;
   --white: #FFFFFF;
 
   --font-display: 'Fraunces', serif;
@@ -80,11 +80,14 @@ a:focus-visible, button:focus-visible, input:focus-visible, select:focus-visible
 }
 
 .logo {
-  font-family: var(--font-display);
-  font-size: 1.4rem;
-  color: var(--ink);
+  display: flex;
+  align-items: center;
 }
-.logo span { color: var(--rose); }
+.logo img {
+  height: 46px;
+  width: auto;
+  display: block;
+}
 
 .nav-links {
   display: flex;
