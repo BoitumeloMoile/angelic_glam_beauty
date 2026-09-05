@@ -30,17 +30,23 @@
   <div class="wrap">
     <div class="section-head">
       <h1>Book an appointment</h1>
-      <p>Pick a service and an open time below. You'll place a $20 deposit to confirm the slot — it's applied to your total and is non-refundable. See the full <a href="policy.html">booking policy</a>.</p>
+      <p>Pick a service and an open time below. You'll place a R200 deposit to confirm the slot — it's applied to your total and is non-refundable. See the full <a href="policy.html">booking policy</a>.</p>
     </div>
 
     <div class="field" style="max-width:320px">
       <label for="service-select">Service</label>
       <select id="service-select">
-        <option value="manicure">Classic manicure — $35</option>
-        <option value="gel-manicure">Gel manicure — $50</option>
-        <option value="pedicure">Classic pedicure — $45</option>
-        <option value="spa-pedicure">Spa pedicure — $65</option>
-        <option value="extensions">Gel &amp; acrylic extensions — from $60</option>
+        <option value="gel-overlay-plain">Gel overlay — plain (R100)</option>
+        <option value="gel-overlay-design">Gel overlay — design (R150)</option>
+        <option value="gelx">GelX</option>
+        <option value="set-plain-short">Nail set — plain short (R150)</option>
+        <option value="set-plain-medium">Nail set — plain medium (R170)</option>
+        <option value="set-plain-long">Nail set — plain long (R190)</option>
+        <option value="set-french-short">Nail set — French short (R170)</option>
+        <option value="set-french-medium">Nail set — French medium (R190)</option>
+        <option value="set-french-long">Nail set — French long (R210)</option>
+        <option value="soak-off">Soak off</option>
+        <option value="buff-shine">Buff &amp; shine</option>
       </select>
     </div>
 
@@ -55,8 +61,16 @@
         <dt>Service</dt><dd id="summary-service">—</dd>
         <dt>Date</dt><dd id="summary-date">—</dd>
         <dt>Time</dt><dd id="summary-time">—</dd>
-        <dt>Deposit</dt><dd>$20 (non-refundable, applied to your total)</dd>
+        <dt>Deposit</dt><dd>R200 (non-refundable, applied to your total)</dd>
       </dl>
+
+      <div class="field">
+        <label for="inspo-photos">Inspiration photos (optional, up to 2)</label>
+        <input type="file" id="inspo-photos" accept="image/*" multiple>
+        <div id="inspo-preview" class="inspo-preview"></div>
+        <p class="form-error" id="inspo-error">You can attach a maximum of 2 photos.</p>
+      </div>
+
       <button class="btn btn-primary" id="pay-deposit-btn">Pay deposit &amp; confirm</button>
       <p class="form-note">You'll need to be logged in to complete booking. <a href="login.html">Log in</a> or <a href="register.html">create an account</a> first.</p>
     </div>

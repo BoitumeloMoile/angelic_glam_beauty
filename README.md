@@ -93,6 +93,7 @@ From now on, whenever you save progress: `git add .` → `git commit -m "message
      start_time timestamptz not null,
      status text default 'pending', -- pending | confirmed | cancelled
      deposit_paid boolean default false,
+     inspo_photo_urls jsonb default '[]', -- up to 2 client-uploaded reference photo URLs
      created_at timestamptz default now()
    );
 
@@ -104,7 +105,20 @@ From now on, whenever you save progress: `git add .` → `git commit -m "message
    create policy "Users can create their own appointments"
      on appointments for insert with check (auth.uid() = user_id);
    ```
-5. In **Project Settings → API**, also copy the **service_role key** (different from
+5. Clients can attach up to 2 inspiration photos when booking, so create a storage
+   bucket for them: **Storage → New bucket**, name it `inspo-photos`, and toggle
+   **Public bucket** on (this lets you view the photos via a plain URL). Then, back
+   in the **SQL Editor**, add a policy so people can only upload into their own
+   folder within it:
+   ```sql
+   create policy "Users can upload their own inspo photos"
+     on storage.objects for insert
+     with check (
+       bucket_id = 'inspo-photos'
+       and (storage.foldername(name))[1] = auth.uid()::text
+     );
+   ```
+6. In **Project Settings → API**, also copy the **service_role key** (different from
    the anon key — keep this one secret, you'll only use it in Netlify's environment
    variables, never in frontend code).
 

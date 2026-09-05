@@ -8,8 +8,53 @@ const calendarEl = document.getElementById('booking-calendar');
 const summaryEl = document.getElementById('booking-summary');
 const serviceSelect = document.getElementById('service-select');
 const payBtn = document.getElementById('pay-deposit-btn');
+const inspoInput = document.getElementById('inspo-photos');
+const inspoPreview = document.getElementById('inspo-preview');
+const inspoError = document.getElementById('inspo-error');
 
 let selectedSlot = null; // { dateStr, timeStr }
+let inspoFiles = [];
+
+// Limits to 2 photos, shows small thumbnails, and blocks submission with a
+// clear message if someone selects more than 2.
+inspoInput?.addEventListener('change', () => {
+  const chosen = Array.from(inspoInput.files);
+
+  if (chosen.length > 2) {
+    inspoError.style.display = 'block';
+    inspoInput.value = '';
+    inspoFiles = [];
+    inspoPreview.innerHTML = '';
+    return;
+  }
+
+  inspoError.style.display = 'none';
+  inspoFiles = chosen;
+  inspoPreview.innerHTML = '';
+  inspoFiles.forEach((file) => {
+    const img = document.createElement('img');
+    img.src = URL.createObjectURL(file);
+    inspoPreview.appendChild(img);
+  });
+});
+
+// Uploads the chosen inspo photos to Supabase Storage and returns their
+// public URLs. Requires a public "inspo-photos" bucket — see the README.
+async function uploadInspoPhotos(userId) {
+  const urls = [];
+  for (const file of inspoFiles) {
+    const path = `${userId}/${Date.now()}-${file.name}`;
+    const { error: uploadError } = await supabase.storage
+      .from('inspo-photos')
+      .upload(path, file);
+
+    if (uploadError) throw new Error(`Photo upload failed: ${uploadError.message}`);
+
+    const { data } = supabase.storage.from('inspo-photos').getPublicUrl(path);
+    urls.push(data.publicUrl);
+  }
+  return urls;
+}
 
 async function loadBookedSlots() {
   // Replace with a real query once your "appointments" table exists:
@@ -60,6 +105,18 @@ payBtn?.addEventListener('click', async () => {
   if (!selectedSlot) return;
 
   payBtn.disabled = true;
+  payBtn.textContent = 'Uploading photos…';
+
+  let inspoPhotoUrls = [];
+  try {
+    inspoPhotoUrls = await uploadInspoPhotos(session.user.id);
+  } catch (err) {
+    alert(err.message);
+    payBtn.disabled = false;
+    payBtn.textContent = 'Pay deposit & confirm';
+    return;
+  }
+
   payBtn.textContent = 'Redirecting to payment…';
 
   // Calls the serverless function in netlify/functions/create-payment.js,
@@ -74,6 +131,7 @@ payBtn?.addEventListener('click', async () => {
       userId: session.user.id,
       userEmail: session.user.email,
       userName: session.user.user_metadata?.full_name,
+      inspoPhotoUrls,
     }),
   });
 

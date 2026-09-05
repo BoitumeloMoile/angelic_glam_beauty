@@ -48,7 +48,7 @@ function buildSignature(fields, passphrase) {
 
 exports.handler = async (event) => {
   try {
-    const { service, startTime, userId, userEmail, userName } = JSON.parse(event.body);
+    const { service, startTime, userId, userEmail, userName, inspoPhotoUrls } = JSON.parse(event.body);
 
     if (!service || !startTime || !userId) {
       return { statusCode: 400, body: JSON.stringify({ error: 'Missing booking details.' }) };
@@ -57,7 +57,13 @@ exports.handler = async (event) => {
     // 1. Hold the slot with a pending appointment row.
     const { data: appointment, error: dbError } = await supabase
       .from('appointments')
-      .insert({ user_id: userId, service, start_time: startTime, status: 'pending' })
+      .insert({
+        user_id: userId,
+        service,
+        start_time: startTime,
+        status: 'pending',
+        inspo_photo_urls: inspoPhotoUrls || [],
+      })
       .select()
       .single();
 

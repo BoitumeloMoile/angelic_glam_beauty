@@ -225,6 +225,19 @@ section { padding: 64px 0; }
 .booking-summary dt { color: var(--ink-soft); font-size: 0.9rem; }
 .booking-summary dd { margin: 0; }
 
+.inspo-preview {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
+.inspo-preview img {
+  width: 72px;
+  height: 72px;
+  object-fit: cover;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+}
+
 /* ---------- Policy page ---------- */
 .policy-body h3 { margin-top: 2em; }
 .policy-body p, .policy-body li { color: var(--ink-soft); }
